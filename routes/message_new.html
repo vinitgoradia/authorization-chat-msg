@@ -1,0 +1,128 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sample Site</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script>
+        function message(){
+          var message = prompt("Please enter your message for " + getReceiver());
+          if (message != null) {
+            var xhttp = new XMLHttpRequest();
+            var data = {receiver: getReceiver(), message: message};
+            // xhttp.onreadystatechange = function() {
+            // if (this.readyState == 4 && this.status == 200) {
+            //     document.getElementById("demo").innerHTML = this.responseText;
+            //   }
+            // };
+            xhttp.open("POST", "/home/updateChat", true);
+            // xhttp.send("'" + JSON.stringify(data) + "'");
+            xhttp.send(JSON.stringify(data));
+          }
+        }
+    </script>
+</head>
+<body>
+  <div class="container">
+    <!-- Static navbar -->
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/home/dashboard">Home</a></li>
+            <li class="active"><a href="/home/chat">Chat</a></li>
+            <li class="active"><a href="/home/message">Message</a></li>
+            <li class="active"><a href="/home/sendchatmsg">Chat here</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/home/logout">Logout</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div><!--/.container-fluid -->
+    </nav>
+
+    <!-- Main component for a primary marketing message or call to action -->
+    <div class="jumbotron">
+        <h1>Welcome To Message</h1>
+        <p>Hello</p>
+        <p>Chat here</p>
+        <p>
+          <a class="btn btn-lg btn-primary" href="/home/profile" role="button">Profile view »</a>
+        </p>
+      </div>
+      <div class="topnav">
+        <input type="text" placeholder="Search.." id="search-string"><button type="button" onclick="loadDoc()">Request data</button>
+        <p id="demo" class = "btn btn-lg btn-primary" onclick="message();"></p>
+        <p id="pollDemo"></p>
+      </div>
+    </div>
+    <script>
+        var sender=""; var receiver="";
+
+        function loadDoc() {
+            var xhttp = new XMLHttpRequest();
+            receiver = document.getElementById("search-string").value;
+            data = {search_string: document.getElementById("search-string").value};
+            xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var response = "This user does not exist";
+                var parsedData = JSON.parse(this.responseText);
+                if (parsedData.length > 0) {
+                  response = "Click here to send message to " + parsedData[0].user_name;
+                }
+                document.getElementById("demo").innerHTML = response;
+              }
+            };
+            xhttp.open("POST", "/home/getData", true);
+            // xhttp.send("'" + JSON.stringify(data) + "'");
+            xhttp.send(JSON.stringify(data));
+        }
+
+        function getReceiver(){
+          return receiver;
+        }
+    </script>
+    <script>
+        var thisUser = "";
+        (function poll() {
+          setInterval(function() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var data2 = JSON.parse(this.responseText);
+                thisUser = data2[data2.length - 1].user;
+                if (thisUser != getReceiver()) {
+                  document.getElementById("pollDemo").innerHTML = this.responseText;
+                }
+              }
+            };
+            xhttp.open("POST", "/home/message", true);
+            // xhttp.send("'" + JSON.stringify(data) + "'");
+            xhttp.send();
+          }, 30000);
+        })();
+        function getThisUser(){
+          return thisUser;
+        }
+    </script>
+    <script>
+      // var thisUser = "";
+      // (function getThisUserId() {
+      //     setTimeout(function() {
+      //       var xhttp = new XMLHttpRequest();
+      //       xhttp.onreadystatechange = function() {
+      //       if (this.readyState == 4 && this.status == 200) {
+      //           thisUser = this.responseText;
+      //         }
+      //       };
+      //       xhttp.open("POST", "/home/message", true);
+      //       // xhttp.send("'" + JSON.stringify(data) + "'");
+      //       xhttp.send();
+      //     }, 30000);
+      //   })();
+    </script>
+</body>
+</html>

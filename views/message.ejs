@@ -1,0 +1,17 @@
+<html lang="en">
+
+   <%- include header %>
+   <!-- Main component for a primary marketing message or call to action -->
+      <div class="jumbotron">
+        <h1>Welcome To Message</h1>
+        <p>Hello</p>
+        <p><%=data[0].first_name%>, <%=data[0].last_name%></p>
+        <p>Chat here</p>
+        <p>
+          <a class="btn btn-lg btn-primary" href="/home/profile" role="button">Profile view »</a>
+        </p>
+      </div>
+      <div class="topnav">
+        <input type="text" placeholder="Search.." id="seach-string">
+      </div>
+    <%- include footer %>
